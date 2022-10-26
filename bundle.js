@@ -22112,13 +22112,9 @@ class Scenario extends Controller {
     toggleLightMode() {
         this.setLightMode(!this.darkMode);
     }
-    foregroundColor = 0xffffff;
-    backgroundColor = 0x000000;
+    foregroundColor = 0x000000;
+    backgroundColor = 0xffffff;
     radius = 1;
-    domus = new ot(new oi(this.radius, 30, 30), new jt({
-        color: this.backgroundColor,
-        wireframe: false
-    }));
     getXyzForLatLon(lat, __long) {
         const radius = this.radius * 1.02;
         const phi = (90 - lat) * (Math.PI / 180);
@@ -22131,6 +22127,17 @@ class Scenario extends Controller {
     }
     setMeshPositionForLatLonOnSphere(mesh, lat = 0, __long = 0, altitude = 0) {
         Object.assign(mesh.position, this.getXyzForLatLon(lat, __long));
+    }
+    createFog(color = this.backgroundColor, near = 5, far = 7) {
+        this.scene.fog = new Xi(color, near, far);
+    }
+    createBand(inclination = 0.5 * Math.PI, period = 0) {
+        const curve = new ji(0, 0, this.radius * 1.02, this.radius * 1.02, 0, 2 * Math.PI, false, 0.3 * Math.PI);
+        const ellipse = new Qt(new ve().setFromPoints(curve.getPoints(50)), new pt({
+            color: this.foregroundColor
+        }));
+        ellipse.rotation.set(inclination, period, 0, 'ZYX');
+        return ellipse;
     }
     createStar(lat, lon, color = this.foregroundColor) {
         const sphere = new ot(new oi(0.01, 6, 6), new jt({
@@ -22158,7 +22165,10 @@ class Scenario extends Controller {
         ];
     }
     createMeshes() {
-        this.scene.add(this.domus);
+        this.createFog(0xdddddd, 5.99, 6.01);
+        for(let i = 0; i < 5; i++){
+            this.scene.add(this.createBand(Math.random() * Math.PI, Math.random() * Math.PI));
+        }
         STAR_DATA.stars.forEach(([dec, ra])=>{
             this.scene.add(this.createStar(...this.getLatLongForRaDec(ra, dec)));
         });

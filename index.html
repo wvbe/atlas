@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>🍕://wybe</title>
+		<title>✨ Atlas ✨</title>
 		<meta charset="utf-8" />
 		<meta
 			name="viewport"
@@ -26,48 +26,13 @@
 				overflow: hidden;
 			}
 			body {
-				background-color: var(--background);
+				/* background: radial-gradient(circle at center, #eee, #fff 50%); */
 				color: var(--foreground);
-			}
-
-			#ui {
-				position: absolute;
-				top: 65%;
-				left: 50%;
-				transform: translate(-50%, -50%);
-				text-align: center;
-				white-space: nowrap;
-			}
-			button,
-			a {
-				font-family: sans-serif;
-				text-transform: uppercase;
-				background-color: transparent;
-				color: inherit;
-				display: inline-block;
-				padding: 1em;
-				text-decoration: none;
-				font-weight: bold;
-				transition: background-color 0.3s;
-				font-size: 0.6em;
-				border: none;
-				touch-action: none;
-				border-radius: 5px;
-			}
-			button:hover,
-			a:hover {
-				background-color: var(--special);
-			}
-			#toggle-light-mode {
-				position: absolute;
-				bottom: 0;
-				right: 0;
 			}
 		</style>
 		<script type="module" src="bundle.js"></script>
 		<script type="module">
 			import { Scenario } from './bundle.js';
-			const loadHiResInsteadOfLowRes = window.localStora;
 			window.onload = () => {
 				const controller = new Scenario(document.getElementById('three'), {
 					enableAutoRotate: true,
@@ -75,11 +40,11 @@
 					enableZoom: false,
 					fieldOfView: 45,
 					pixelRatio: window.devicePixelRatio || 1,
-					restrictCameraAngle: false
+					restrictCameraAngle: false,
 				});
 
 				// Start "high res" version if URL search string contains "hi-res"
-				controller.start(window.location.search.includes('hi-res'));
+				controller.start();
 
 				window.controller = controller;
 			};
