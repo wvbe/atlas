@@ -9,12 +9,12 @@ const PREFER_DARK_MODE =
 	window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 export class Scenario extends Controller {
-	start() {
+	async start() {
 		this.setCameraPosition(new THREE.Vector3(0, 0, -6));
 		this.setCameraFocusOnVector3(new THREE.Vector3(0, 0, 0));
 		this.setLightMode(this.darkMode);
 
-		this.createMeshes();
+		await this.createMeshes();
 		this.startAnimationLoop();
 	}
 
@@ -105,10 +105,20 @@ export class Scenario extends Controller {
 		return [(raInRad * 180) / Math.PI, 90 - (decInRad * 180) / Math.PI];
 	}
 
-	createMeshes() {
+	async createMeshes() {
 		// All of the backface is shown as #DDDDDD:
-		this.createFog(0xdddddd, 5.99, 6.01);
+		this.createFog(0xdddddd, 5, 7);
 
+		const material = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true });
+		const atlas = await this.addGltf('gltf/atlas.gltf');
+
+		atlas.scene.traverse((o) => {
+			if (o instanceof THREE.Mesh) {
+				o.material = material;
+			}
+		});
+		atlas.scene.scale.set(0.01, 0.01, 0.01);
+		atlas.scene.position.set(0, -2.0, 0.2);
 		// this.scene.add(this.nucleus);
 
 		for (let i = 0; i < 5; i++) {

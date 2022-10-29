@@ -22095,11 +22095,11 @@ const STAR_DATA = {
 };
 const PREFER_DARK_MODE = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 class Scenario extends Controller {
-    start() {
+    async start() {
         this.setCameraPosition(new w(0, 0, -6));
         this.setCameraFocusOnVector3(new w(0, 0, 0));
         this.setLightMode(this.darkMode);
-        this.createMeshes();
+        await this.createMeshes();
         this.startAnimationLoop();
     }
     darkMode = PREFER_DARK_MODE;
@@ -22164,8 +22164,20 @@ class Scenario extends Controller {
             90 - decInRad * 180 / Math.PI
         ];
     }
-    createMeshes() {
-        this.createFog(0xdddddd, 5.99, 6.01);
+    async createMeshes() {
+        this.createFog(0xdddddd, 5, 7);
+        const material = new jt({
+            color: 0x000000,
+            wireframe: true
+        });
+        const atlas = await this.addGltf('gltf/atlas.gltf');
+        atlas.scene.traverse((o)=>{
+            if (o instanceof ot) {
+                o.material = material;
+            }
+        });
+        atlas.scene.scale.set(0.01, 0.01, 0.01);
+        atlas.scene.position.set(0, -2.0, 0.2);
         for(let i = 0; i < 5; i++){
             this.scene.add(this.createBand(Math.random() * Math.PI, Math.random() * Math.PI));
         }
