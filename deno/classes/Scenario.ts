@@ -1,36 +1,19 @@
 import * as THREE from 'three';
-import { SrcAlphaFactor } from 'https://esm.sh/v77/@types/three@0.137.0/index.d.ts';
+// import { SrcAlphaFactor } from 'https://esm.sh/v77/@types/three@0.137.0/index.d.ts';
 import { Controller } from './Controller.ts';
-import { Event } from './Event.ts';
 
 import STAR_DATA from './star-data.ts';
 
-const PREFER_DARK_MODE =
-	window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
 export class Scenario extends Controller {
-	async start() {
+	start() {
 		this.setCameraPosition(new THREE.Vector3(0, 0, -6));
 		this.setCameraFocusOnVector3(new THREE.Vector3(0, 0, 0));
-		this.setLightMode(this.darkMode);
 
-		await this.createMeshes();
+		this.createMeshes();
 		this.startAnimationLoop();
 	}
 
-	darkMode = PREFER_DARK_MODE;
 
-	$light = new Event();
-
-	setLightMode(nightlight: boolean) {
-		this.darkMode = nightlight;
-		globalThis.document.body.setAttribute('class', this.darkMode ? 'nightlight' : 'daylight');
-		this.$light.emit();
-	}
-
-	toggleLightMode() {
-		this.setLightMode(!this.darkMode);
-	}
 
 	private foregroundColor = 0x000000;
 	private backgroundColor = 0xffffff;
@@ -105,20 +88,20 @@ export class Scenario extends Controller {
 		return [(raInRad * 180) / Math.PI, 90 - (decInRad * 180) / Math.PI];
 	}
 
-	async createMeshes() {
+	createMeshes() {
 		// All of the backface is shown as #DDDDDD:
 		this.createFog(0xdddddd, 5, 7);
 
-		const material = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true });
-		const atlas = await this.addGltf('gltf/atlas.gltf');
+		// const material = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true });
+		// const atlas = await this.addGltf('gltf/atlas.gltf');
 
-		atlas.scene.traverse((o) => {
-			if (o instanceof THREE.Mesh) {
-				o.material = material;
-			}
-		});
-		atlas.scene.scale.set(0.01, 0.01, 0.01);
-		atlas.scene.position.set(0, -2.0, 0.2);
+		// atlas.scene.traverse((o) => {
+		// 	if (o instanceof THREE.Mesh) {
+		// 		o.material = material;
+		// 	}
+		// });
+		// atlas.scene.scale.set(0.01, 0.01, 0.01);
+		// atlas.scene.position.set(0, -2.0, 0.2);
 		// this.scene.add(this.nucleus);
 
 		for (let i = 0; i < 5; i++) {
